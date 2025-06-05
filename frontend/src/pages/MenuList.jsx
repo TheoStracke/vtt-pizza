@@ -1,0 +1,63 @@
+import { useState, useEffect } from 'react';
+import { Box, Typography, Button, Grid, Snackbar, Alert, CircularProgress, Paper, IconButton } from '@mui/material';
+import AddIcon from '@mui/icons-material/Add';
+import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
+
+export default function MenuList({ onAddToCart }) {
+  const [menu, setMenu] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    setLoading(true);
+    axios.get('/menu')
+      .then(res => {
+        setMenu(res.data);
+        setError('');
+      })
+      .catch(() => setError('Erro ao carregar o menu!'))
+      .finally(() => setLoading(false));
+  }, []);
+
+  const handleAdd = (item) => {
+    onAddToCart(item);
+    setSuccess('Adicionado ao carrinho!');
+  };
+
+  if (loading) return <Box textAlign="center" mt={6}><CircularProgress color="secondary" /></Box>;
+  if (error) return <Alert severity="error">{error}</Alert>;
+
+  return (
+    <Box>
+      <Typography variant="h2" color="primary" gutterBottom sx={{ fontWeight: 900 }}>
+        Menu
+      </Typography>
+      <Grid container spacing={4} justifyContent="center">
+        {menu.map(item => (
+          <Grid item key={item.id} xs={12} sm={6} md={4}>
+            <Paper elevation={6} sx={{ p: 3, borderRadius: 6, position: 'relative', minHeight: 220 }}>
+              <Typography variant="h5" sx={{ fontWeight: 700 }}>{item.nome}</Typography>
+              <Typography variant="body1">Tamanho: <b>{item.tamanho}</b></Typography>
+              <Typography variant="h6" color="secondary">R$ {item.valor?.toFixed(2)}</Typography>
+              <Box mt={2} display="flex" gap={1}>
+                <Button variant="contained" color="secondary" startIcon={<AddIcon />} onClick={() => handleAdd(item)}>
+                  Adicionar
+                </Button>
+                <Button variant="outlined" color="info" onClick={() => navigate(`/menu/${item.id}`)}>
+                  Detalhes
+                </Button>
+              </Box>
+            </Paper>
+          </Grid>
+        ))}
+      </Grid>
+      <Snackbar open={!!success} autoHideDuration={2000} onClose={() => setSuccess('')} anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}>
+        <Alert onClose={() => setSuccess('')} severity="success" sx={{ width: '100%' }}>{success}</Alert>
+      </Snackbar>
+    </Box>
+  );
+}
