@@ -13,7 +13,7 @@ export default function MenuAdmin() {
 
   const fetchMenu = () => {
     setLoading(true);
-    axios.get('/menu')
+    axios.get('/pizzas')
       .then(res => {
         setMenu(res.data);
         setError('');
@@ -32,13 +32,13 @@ export default function MenuAdmin() {
   };
 
   const handleDelete = async (id) => {
-    if (!window.confirm('Tem certeza que deseja remover este item?')) return;
+    if (!window.confirm('Tem certeza que deseja remover esta pizza?')) return;
     try {
-      await axios.delete(`/menu/${id}`);
-      setSuccess('Item removido com sucesso!');
+      await axios.delete(`/pizzas/${id}`);
+      setSuccess('Pizza removida com sucesso!');
       fetchMenu();
     } catch {
-      setError('Erro ao remover item!');
+      setError('Erro ao remover pizza!');
     }
   };
 
@@ -54,17 +54,17 @@ export default function MenuAdmin() {
   return (
     <Box>
       <Typography variant="h2" color="primary" gutterBottom sx={{ fontWeight: 900 }}>
-        Administração do Menu
+        Administração de Pizzas
       </Typography>
       <Button variant="contained" color="secondary" sx={{ mb: 3 }} onClick={() => { setEditItem(null); setOpenForm(true); }}>
-        Adicionar Novo Item
+        Adicionar Nova Pizza
       </Button>
       <Box display="flex" flexWrap="wrap" gap={4} justifyContent="center">
         {menu.map(item => (
           <Paper key={item.id} elevation={6} sx={{ p: 3, minWidth: 260, borderRadius: 6, mb: 2, position: 'relative' }}>
             <Typography variant="h5" sx={{ fontWeight: 700 }}>{item.nome}</Typography>
-            <Typography variant="body1">Tamanho: <b>{item.tamanho}</b></Typography>
-            <Typography variant="h6" color="secondary">R$ {item.valor?.toFixed(2)}</Typography>
+            <Typography variant="body1">Descrição: <b>{item.descricao}</b></Typography>
+            <Typography variant="h6" color="secondary">R$ {item.preco?.toFixed(2)}</Typography>
             <Box mt={2} display="flex" gap={1}>
               <Button variant="outlined" color="info" onClick={() => handleEdit(item)}>
                 Editar
@@ -77,7 +77,7 @@ export default function MenuAdmin() {
         ))}
       </Box>
       <Dialog open={openForm} onClose={() => setOpenForm(false)}>
-        <DialogTitle>{editItem ? 'Editar Item' : 'Novo Item'}</DialogTitle>
+        <DialogTitle>{editItem ? 'Editar Pizza' : 'Nova Pizza'}</DialogTitle>
         <DialogContent>
           <MenuForm editItem={editItem} onSuccess={handleFormSuccess} />
         </DialogContent>

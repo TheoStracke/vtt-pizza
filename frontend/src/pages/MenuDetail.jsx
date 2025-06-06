@@ -13,7 +13,7 @@ export default function MenuDetail({ onAddToCart }) {
 
   useEffect(() => {
     setLoading(true);
-    axios.get(`/menu/${id}`)
+    axios.get(`/pizzas/${id}`)
       .then(res => {
         setItem(res.data);
         setError('');
@@ -30,8 +30,8 @@ export default function MenuDetail({ onAddToCart }) {
     <Box>
       <Paper elevation={6} sx={{ p: 4, borderRadius: 6, maxWidth: 500, mx: 'auto', mt: 4 }}>
         <Typography variant="h4" color="primary" sx={{ fontWeight: 900 }}>{item.nome}</Typography>
-        <Typography variant="body1" sx={{ mt: 2 }}>Tamanho: <b>{item.tamanho}</b></Typography>
-        <Typography variant="h6" color="secondary" sx={{ mt: 1 }}>R$ {item.valor?.toFixed(2)}</Typography>
+        <Typography variant="body1" sx={{ mt: 2 }}>Descrição: <b>{item.descricao}</b></Typography>
+        <Typography variant="h6" color="secondary" sx={{ mt: 1 }}>R$ {item.preco?.toFixed(2)}</Typography>
         <Box mt={3} display="flex" gap={2}>
           <Button variant="contained" color="secondary" onClick={() => { onAddToCart(item); setSuccess('Adicionado ao carrinho!'); }}>
             Adicionar ao Carrinho

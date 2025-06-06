@@ -3,7 +3,7 @@ import { Box, Typography, Button, TextField, Paper, Snackbar, Alert, CircularPro
 import axios from 'axios';
 
 export default function MenuForm({ editItem, onSuccess }) {
-  const [form, setForm] = useState(editItem || { nome: '', tamanho: '', valor: '' });
+  const [form, setForm] = useState(editItem || { nome: '', descricao: '', preco: '' });
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState('');
   const [error, setError] = useState('');
@@ -18,12 +18,12 @@ export default function MenuForm({ editItem, onSuccess }) {
     setError('');
     try {
       if (editItem) {
-        await axios.put(`/menu/${editItem.id}`, form);
+        await axios.put(`/pizzas/${editItem.id}`, form);
         setSuccess('Item atualizado com sucesso!');
       } else {
-        await axios.post('/menu', form);
+        await axios.post('/pizzas', form);
         setSuccess('Item adicionado com sucesso!');
-        setForm({ nome: '', tamanho: '', valor: '' });
+        setForm({ nome: '', descricao: '', preco: '' });
       }
       if (onSuccess) onSuccess();
     } catch {
@@ -36,7 +36,7 @@ export default function MenuForm({ editItem, onSuccess }) {
   return (
     <Paper elevation={6} sx={{ p: 4, borderRadius: 6, maxWidth: 500, mx: 'auto', mt: 4 }}>
       <Typography variant="h5" color="primary" sx={{ fontWeight: 900, mb: 2 }}>
-        {editItem ? 'Editar Item' : 'Novo Item'}
+        {editItem ? 'Editar Pizza' : 'Nova Pizza'}
       </Typography>
       <form onSubmit={handleSubmit}>
         <TextField
@@ -49,18 +49,18 @@ export default function MenuForm({ editItem, onSuccess }) {
           sx={{ mb: 2 }}
         />
         <TextField
-          label="Tamanho"
-          name="tamanho"
-          value={form.tamanho}
+          label="Descrição"
+          name="descricao"
+          value={form.descricao}
           onChange={handleChange}
           fullWidth
           required
           sx={{ mb: 2 }}
         />
         <TextField
-          label="Valor"
-          name="valor"
-          value={form.valor}
+          label="Preço"
+          name="preco"
+          value={form.preco}
           onChange={handleChange}
           type="number"
           fullWidth

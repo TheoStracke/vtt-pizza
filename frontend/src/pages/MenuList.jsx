@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
-import { Box, Typography, Button, Grid, Snackbar, Alert, CircularProgress, Paper, IconButton } from '@mui/material';
+import { Box, Typography, Button, Grid, Snackbar, Alert, CircularProgress, Paper } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
-import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
@@ -14,7 +13,7 @@ export default function MenuList({ onAddToCart }) {
 
   useEffect(() => {
     setLoading(true);
-    axios.get('/menu')
+    axios.get('/pizzas')
       .then(res => {
         setMenu(res.data);
         setError('');
@@ -41,8 +40,8 @@ export default function MenuList({ onAddToCart }) {
           <Grid item key={item.id} xs={12} sm={6} md={4}>
             <Paper elevation={6} sx={{ p: 3, borderRadius: 6, position: 'relative', minHeight: 220 }}>
               <Typography variant="h5" sx={{ fontWeight: 700 }}>{item.nome}</Typography>
-              <Typography variant="body1">Tamanho: <b>{item.tamanho}</b></Typography>
-              <Typography variant="h6" color="secondary">R$ {item.valor?.toFixed(2)}</Typography>
+              <Typography variant="body1">Descrição: <b>{item.descricao}</b></Typography>
+              <Typography variant="h6" color="secondary">R$ {item.preco?.toFixed(2)}</Typography>
               <Box mt={2} display="flex" gap={1}>
                 <Button variant="contained" color="secondary" startIcon={<AddIcon />} onClick={() => handleAdd(item)}>
                   Adicionar
