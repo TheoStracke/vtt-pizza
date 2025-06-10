@@ -73,7 +73,7 @@ const theme = createTheme({
   },
 });
 
-axios.defaults.baseURL = 'http://localhost:8080'; // ajuste se necessário
+axios.defaults.baseURL = 'http://localhost:8080'; 
 axios.defaults.headers.post['Content-Type'] = 'application/json';
 axios.defaults.headers.put['Content-Type'] = 'application/json';
 axios.defaults.headers.patch['Content-Type'] = 'application/json';
