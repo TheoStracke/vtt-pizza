@@ -33,8 +33,8 @@ export default function MenuDetail({ onAddToCart }) {
         <Typography variant="body1" sx={{ mt: 2 }}>Descrição: <b>{item.descricao}</b></Typography>
         <Typography variant="h6" color="secondary" sx={{ mt: 1 }}>R$ {item.preco?.toFixed(2)}</Typography>
         <Box mt={3} display="flex" gap={2}>
-          <Button variant="contained" color="secondary" onClick={() => { onAddToCart(item); setSuccess('Adicionado ao carrinho!'); }}>
-            Adicionar ao Carrinho
+          <Button variant="contained" color="secondary" onClick={() => { setSuccess('Adicionado ao cardápio!'); navigate('/cardapio'); }}>
+            Adicionar ao Cardápio
           </Button>
           <Button variant="outlined" color="info" onClick={() => navigate(-1)}>
             Voltar

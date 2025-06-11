@@ -5,24 +5,24 @@ import axios from 'axios';
 const theme = createTheme({
   palette: {
     primary: {
-      main: '#22223B', // azul escuro moderno
-      light: '#4A4E69', // roxo acinzentado
+      main: '#232946', // azul escuro
+      light: '#4A4E69', // cinza azulado
       dark: '#1A1A2E', // quase preto
       contrastText: '#F2E9E4', // bege claro
     },
     secondary: {
-      main: '#F72585', // rosa vibrante
-      dark: '#B5179E', // roxo escuro
-      light: '#FBB1D2', // rosa claro
-      contrastText: '#fff',
+      main: '#F9C74F', // amarelo vibrante
+      dark: '#F9844A', // laranja queimado
+      light: '#FFF6B7', // amarelo claro
+      contrastText: '#232946',
     },
     background: {
-      default: '#232946', // azul escuro
-      paper: '#393E6A', // roxo acinzentado
+      default: '#F7F7F7', // cinza claro
+      paper: '#FFFFFF', // branco
     },
     text: {
-      primary: '#F2E9E4', // bege claro
-      secondary: '#F72585', // rosa vibrante
+      primary: '#232946', // azul escuro
+      secondary: '#F9C74F', // amarelo vibrante
     },
     success: {
       main: '#43AA8B', // verde moderno
@@ -34,10 +34,10 @@ const theme = createTheme({
     },
     warning: {
       main: '#F9C74F', // amarelo moderno
-      contrastText: '#22223B',
+      contrastText: '#232946',
     },
     info: {
-      main: '#4361EE', // azul vibrante
+      main: '#577590', // azul acinzentado
       contrastText: '#fff',
     },
   },
@@ -58,15 +58,15 @@ const theme = createTheme({
           borderRadius: 18,
           fontWeight: 700,
           fontSize: '1.1rem',
-          boxShadow: '0 2px 12px #F7258533',
+          boxShadow: '0 2px 12px #F9C74F33',
         },
       },
     },
     MuiPaper: {
       styleOverrides: {
         root: {
-          background: 'linear-gradient(135deg, #232946 60%, #F72585 100%)',
-          color: '#F2E9E4',
+          background: '#FFFFFF',
+          color: '#232946',
         },
       },
     },

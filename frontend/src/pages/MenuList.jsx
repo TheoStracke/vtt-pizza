@@ -33,12 +33,12 @@ export default function MenuList({ onAddToCart }) {
   return (
     <Box>
       <Typography variant="h2" color="primary" gutterBottom sx={{ fontWeight: 900 }}>
-        Menu
+        Cardápio
       </Typography>
       <Grid container spacing={4} justifyContent="center">
         {menu.map(item => (
           <Grid item key={item.id} xs={12} sm={6} md={4}>
-            <Paper elevation={6} sx={{ p: 3, borderRadius: 6, position: 'relative', minHeight: 220 }}>
+            <Paper elevation={6} sx={{ p: 3, minWidth: 260, borderRadius: 6, background: 'linear-gradient(135deg, #FFF6B7 60%, #F9C74F 100%)', color: '#232946', boxShadow: '0 8px 32px #F9C74F44', mb: 2, }}>
               <Typography variant="h5" sx={{ fontWeight: 700 }}>{item.nome}</Typography>
               <Typography variant="body1">Descrição: <b>{item.descricao}</b></Typography>
               <Typography variant="h6" color="secondary">R$ {item.preco?.toFixed(2)}</Typography>

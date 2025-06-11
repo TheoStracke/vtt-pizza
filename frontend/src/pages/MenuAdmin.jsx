@@ -61,7 +61,7 @@ export default function MenuAdmin() {
       </Button>
       <Box display="flex" flexWrap="wrap" gap={4} justifyContent="center">
         {menu.map(item => (
-          <Paper key={item.id} elevation={6} sx={{ p: 3, minWidth: 260, borderRadius: 6, mb: 2, position: 'relative' }}>
+          <Paper key={item.id} elevation={6} sx={{ p: 3, minWidth: 260, borderRadius: 6, mb: 2, position: 'relative', background: '#FFF', color: '#232946', boxShadow: '0 8px 32px #F9C74F44' }}>
             <Typography variant="h5" sx={{ fontWeight: 700 }}>{item.nome}</Typography>
             <Typography variant="body1">Descrição: <b>{item.descricao}</b></Typography>
             <Typography variant="h6" color="secondary">R$ {item.preco?.toFixed(2)}</Typography>

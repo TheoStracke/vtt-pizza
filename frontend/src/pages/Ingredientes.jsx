@@ -26,9 +26,9 @@ export default function Ingredientes() {
               p: 3,
               minWidth: 220,
               borderRadius: 6,
-              background: 'linear-gradient(135deg, #FFD600 60%, #8B0000 100%)',
-              color: '#1a1a1a',
-              boxShadow: '0 8px 32px #8B000044',
+              background: 'linear-gradient(135deg, #FFF6B7 60%, #F9C74F 100%)',
+              color: '#232946',
+              boxShadow: '0 8px 32px #F9C74F44',
               mb: 2,
             }}>
               <Typography variant="h6" sx={{ fontWeight: 700 }}>{ing.ingrediente}</Typography>

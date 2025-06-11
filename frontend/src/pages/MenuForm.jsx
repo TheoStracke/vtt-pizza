@@ -34,8 +34,8 @@ export default function MenuForm({ editItem, onSuccess }) {
   };
 
   return (
-    <Paper elevation={6} sx={{ p: 4, borderRadius: 6, maxWidth: 500, mx: 'auto', mt: 4 }}>
-      <Typography variant="h5" color="primary" sx={{ fontWeight: 900, mb: 2 }}>
+    <Paper elevation={0} sx={{ p: 2, boxShadow: 'none', background: 'transparent' }}>
+      <Typography variant="h6" color="primary" sx={{ fontWeight: 900, mb: 2 }}>
         {editItem ? 'Editar Pizza' : 'Nova Pizza'}
       </Typography>
       <form onSubmit={handleSubmit}>

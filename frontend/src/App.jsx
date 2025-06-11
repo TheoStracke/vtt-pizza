@@ -1,13 +1,10 @@
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
-import { ThemeProvider, CssBaseline, AppBar, Toolbar, Typography, Button, Box, Badge, IconButton } from '@mui/material';
+import { ThemeProvider, CssBaseline, AppBar, Toolbar, Typography, Button, Box } from '@mui/material';
 import { AnimatePresence, motion } from 'framer-motion';
-import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import theme from './theme';
 import Home from './pages/Home';
 import Cardapio from './pages/Cardapio';
 import Ingredientes from './pages/Ingredientes';
-import MenuList from './pages/MenuList';
-import MenuDetail from './pages/MenuDetail';
 import MenuAdmin from './pages/MenuAdmin';
 import { useState } from 'react'
 import reactLogo from './assets/react.svg'
@@ -30,25 +27,17 @@ function App() {
               VTT Pizza
             </Typography>
             <Button color="secondary" component={Link} to="/">Home</Button>
-            <Button color="secondary" component={Link} to="/menu">Menu</Button>
-            <Button color="secondary" component={Link} to="/menu/admin">Admin</Button>
             <Button color="secondary" component={Link} to="/cardapio">Cardápio</Button>
             <Button color="secondary" component={Link} to="/ingredientes">Ingredientes</Button>
-            <IconButton color="secondary" sx={{ ml: 2 }}>
-              <Badge badgeContent={cart.length} color="error">
-                <ShoppingCartIcon />
-              </Badge>
-            </IconButton>
+            <Button color="secondary" component={Link} to="/cardapio/admin">Admin</Button>
           </Toolbar>
         </AppBar>
         <Box sx={{ p: { xs: 1, md: 4 }, minHeight: '70vh' }}>
           <AnimatePresence mode="wait">
             <Routes>
               <Route path="/" element={<PageWrapper><Home /></PageWrapper>} />
-              <Route path="/menu" element={<PageWrapper><MenuList onAddToCart={handleAddToCart} /></PageWrapper>} />
-              <Route path="/menu/:id" element={<PageWrapper><MenuDetail onAddToCart={handleAddToCart} /></PageWrapper>} />
-              <Route path="/menu/admin" element={<PageWrapper><MenuAdmin /></PageWrapper>} />
               <Route path="/cardapio" element={<PageWrapper><Cardapio /></PageWrapper>} />
+              <Route path="/cardapio/admin" element={<PageWrapper><MenuAdmin /></PageWrapper>} />
               <Route path="/ingredientes" element={<PageWrapper><Ingredientes /></PageWrapper>} />
             </Routes>
           </AnimatePresence>
