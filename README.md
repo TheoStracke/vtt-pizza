@@ -2,6 +2,11 @@
 
 Este projeto é um sistema completo para gerenciamento de itens de menu de pizza, com backend em Spring Boot e frontend em React + Vite, utilizando Material-UI e integração total via API REST.
 
+# Equipe
+Thiago
+Theo
+Vinicius
+
 ## Funcionalidades
 - Listar itens do menu (GET /menu ou /cardapio)
 - Visualizar detalhes do item (GET /menu/{id})
