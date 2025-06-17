@@ -30,6 +30,7 @@ function App() {
             <Button color="secondary" component={Link} to="/">Home</Button>
             <Button color="secondary" component={Link} to="/cardapio">Cardápio</Button>
             <Button color="secondary" component={Link} to="/ingredientes">Ingredientes</Button>
+            <Button color="secondary" component={Link} to="/cliente">Cliente</Button>
             <Button color="secondary" component={Link} to="/cardapio/admin">Admin</Button>
           </Toolbar>
         </AppBar>
