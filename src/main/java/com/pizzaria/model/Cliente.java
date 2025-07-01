@@ -10,8 +10,7 @@ public class Cliente {
     private String nome;
     private String email;
     private String telefone;
-    private String cpf;
-    private String endereco;
+    // ...existing code...
 
     // Getters e setters
     public Long getId() { return id; }
@@ -22,8 +21,5 @@ public class Cliente {
     public void setEmail(String email) { this.email = email; }
     public String getTelefone() { return telefone; }
     public void setTelefone(String telefone) { this.telefone = telefone; }
-    public String getCpf() { return cpf; }
-    public void setCpf(String cpf) { this.cpf = cpf; }
-    public String getEndereco() { return endereco; }
-    public void setEndereco(String endereco) { this.endereco = endereco; }
+    // ...existing code...
 }

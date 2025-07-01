@@ -17,13 +17,13 @@ export default function ClienteForm() {
     const response = await fetch("http://localhost:8080/clientes", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ nome, email, telefone, cpf, endereco }),
+      body: JSON.stringify({ nome, email, telefone }),
     });
     if (response.ok) {
       const data = await response.json();
       localStorage.setItem("clienteId", data.id);
       setMensagem("Cliente cadastrado com sucesso! ID: " + data.id);
-      setNome(""); setEmail(""); setTelefone(""); setCpf(""); setEndereco("");
+      setNome(""); setEmail(""); setTelefone("");
     } else {
       setErro(true);
       setMensagem("Erro ao cadastrar cliente.");
@@ -40,8 +40,6 @@ export default function ClienteForm() {
           <TextField label="Nome" value={nome} onChange={e => setNome(e.target.value)} required fullWidth />
           <TextField label="Email" value={email} onChange={e => setEmail(e.target.value)} required fullWidth type="email" />
           <TextField label="Telefone" value={telefone} onChange={e => setTelefone(e.target.value)} required fullWidth />
-          <TextField label="CPF" value={cpf} onChange={e => setCpf(e.target.value)} required fullWidth />
-          <TextField label="Endereço" value={endereco} onChange={e => setEndereco(e.target.value)} required fullWidth />
           <Button type="submit" variant="contained" color="primary" sx={{ mt: 2 }}>Cadastrar</Button>
         </form>
         {mensagem && (
