@@ -1,9 +1,12 @@
 com/pizzaria/model/Pedido.class
+com/pizzaria/service/CarrinhoService.class
 com/pizzaria/model/Usuario.class
 com/pizzaria/repository/UsuarioRepository.class
 com/pizzaria/controller/CardapioController.class
+com/pizzaria/repository/ItemCarrinhoRepository.class
 com/pizzaria/model/Cliente.class
 com/pizzaria/controller/IngredienteController.class
+com/pizzaria/controller/CarrinhoController.class
 com/pizzaria/repository/IngredienteRepository.class
 com/pizzaria/PizzaDemoApplication.class
 com/pizzaria/controller/ClienteController.class
@@ -15,6 +18,7 @@ com/pizzaria/controller/UsuarioController.class
 com/pizzaria/controller/PizzaController.class
 com/pizzaria/repository/CardapioRepository.class
 com/pizzaria/service/PedidoService.class
+com/pizzaria/model/Carrinho.class
 com/pizzaria/dto/PizzaDTO.class
 com/pizzaria/model/Pizza.class
 com/pizzaria/controller/AutenticacaoController.class
@@ -24,9 +28,11 @@ com/pizzaria/model/Cardapio.class
 com/pizzaria/service/PizzaService.class
 com/pizzaria/service/CardapioService.class
 com/pizzaria/configuration/CorsConfig.class
+com/pizzaria/model/ItemCarrinho.class
 com/pizzaria/controller/PedidoController.class
 com/pizzaria/repository/PedidoRepository.class
 com/pizzaria/service/UsuarioService.class
 com/pizzaria/configuration/CorsConfig$1.class
+com/pizzaria/repository/CarrinhoRepository.class
 com/pizzaria/repository/PizzaRepository.class
 com/pizzaria/service/ClienteService.class

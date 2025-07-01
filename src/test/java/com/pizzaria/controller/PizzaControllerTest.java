@@ -16,9 +16,11 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(PizzaController.class)
+@org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc(addFilters = false)
 class PizzaControllerTest {
     @Autowired
     private MockMvc mockMvc;
+    @org.springframework.boot.test.mock.mockito.MockBean
     private PizzaService pizzaService;
     @Autowired
     private ObjectMapper objectMapper;
