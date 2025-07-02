@@ -5,7 +5,11 @@ import theme from './theme';
 import Home from './pages/Home';
 import Cardapio from './pages/Cardapio';
 import Ingredientes from './pages/Ingredientes';
+import MenuList from './pages/MenuList';
+import MenuDetail from './pages/MenuDetail';
 import MenuAdmin from './pages/MenuAdmin';
+import Carrinho from './pages/Carrinho';
+import FinalizacaoPedido from './pages/FinalizacaoPedido';
 import ClienteForm from './pages/ClienteForm';
 import { useState } from 'react'
 import reactLogo from './assets/react.svg'
@@ -29,9 +33,11 @@ function App() {
             </Typography>
             <Button color="secondary" component={Link} to="/">Home</Button>
             <Button color="secondary" component={Link} to="/cardapio">Cardápio</Button>
-            <Button color="secondary" component={Link} to="/ingredientes">Ingredientes</Button>
-            <Button color="secondary" component={Link} to="/cliente">Cliente</Button>
+            <Button color="secondary" component={Link} to="/carrinho">Carrinho</Button>
+            <Button color="secondary" component={Link} to="/finalizar">Finalizar Pedido</Button>
+            <Button color="secondary" component={Link} to="/cadastro">Cadastro</Button>
             <Button color="secondary" component={Link} to="/cardapio/admin">Admin</Button>
+            <Button color="secondary" component={Link} to="/ingredientes">Ingredientes</Button>
           </Toolbar>
         </AppBar>
         <Box sx={{ p: { xs: 1, md: 4 }, minHeight: '70vh' }}>
@@ -39,9 +45,12 @@ function App() {
             <Routes>
               <Route path="/" element={<PageWrapper><Home /></PageWrapper>} />
               <Route path="/cardapio" element={<PageWrapper><Cardapio /></PageWrapper>} />
+              <Route path="/cardapio/:id" element={<PageWrapper><MenuDetail onAddToCart={handleAddToCart} /></PageWrapper>} />
               <Route path="/cardapio/admin" element={<PageWrapper><MenuAdmin /></PageWrapper>} />
               <Route path="/ingredientes" element={<PageWrapper><Ingredientes /></PageWrapper>} />
-              <Route path="/cliente" element={<PageWrapper><ClienteForm /></PageWrapper>} />
+              <Route path="/carrinho" element={<PageWrapper><Carrinho /></PageWrapper>} />
+              <Route path="/finalizar" element={<PageWrapper><FinalizacaoPedido /></PageWrapper>} />
+              <Route path="/cadastro" element={<PageWrapper><ClienteForm /></PageWrapper>} />
             </Routes>
           </AnimatePresence>
         </Box>

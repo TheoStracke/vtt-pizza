@@ -28,6 +28,13 @@ public class CarrinhoController {
         return ResponseEntity.ok(itens);
     }
 
+    // Novo endpoint: listar itens do carrinho por clienteId
+    @GetMapping("/cliente/{clienteId}")
+    public ResponseEntity<List<ItemCarrinho>> listarItensPorCliente(@PathVariable Long clienteId) {
+        List<ItemCarrinho> itens = carrinhoService.listarItensPorCliente(clienteId);
+        return ResponseEntity.ok(itens);
+    }
+
     @DeleteMapping("/{itemId}")
     public ResponseEntity<Void> removerItem(@PathVariable Long itemId) {
         carrinhoService.removerItem(itemId);

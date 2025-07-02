@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Box, Typography, Button, Paper, CircularProgress, Alert, Snackbar, Dialog, DialogTitle, DialogContent, DialogActions, TextField } from '@mui/material';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 
 export default function Cardapio() {
   const [menu, setMenu] = useState([]);
@@ -73,6 +74,24 @@ export default function Cardapio() {
     }
   };
 
+  const handleAddToCart = async (pizza) => {
+    const clienteId = localStorage.getItem('clienteId');
+    if (!clienteId) {
+      setError('Faça login/cadastro para adicionar ao carrinho!');
+      return;
+    }
+    try {
+      await axios.post('/carrinho', {
+        pizza: { id: pizza.id, nome: pizza.nome, preco: pizza.preco },
+        quantidade: 1,
+        cliente: { id: clienteId }
+      });
+      setSuccess('Adicionado ao carrinho!');
+    } catch {
+      setError('Erro ao adicionar ao carrinho!');
+    }
+  };
+
   if (loading) return <Box textAlign="center" mt={6}><CircularProgress color="secondary" /></Box>;
   if (error) return <Alert severity="error">{error}</Alert>;
 
@@ -91,6 +110,9 @@ export default function Cardapio() {
             <Typography variant="body1">Descrição: <b>{item.descricao}</b></Typography>
             <Typography variant="h6" color="secondary">R$ {item.preco?.toFixed(2)}</Typography>
             <Box mt={2} display="flex" gap={1}>
+              <Button variant="contained" color="secondary" startIcon={<ShoppingCartIcon />} onClick={() => handleAddToCart(item)}>
+                Adicionar ao Carrinho
+              </Button>
               <Button variant="outlined" color="info" onClick={() => handleEdit(item)}>
                 Editar
               </Button>

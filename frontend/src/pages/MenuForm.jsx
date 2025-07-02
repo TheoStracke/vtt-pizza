@@ -1,11 +1,10 @@
 import { useState } from 'react';
-import { Box, Typography, Button, TextField, Paper, Snackbar, Alert, CircularProgress } from '@mui/material';
+import { Box, TextField, Button, CircularProgress, Alert } from '@mui/material';
 import axios from 'axios';
 
 export default function MenuForm({ editItem, onSuccess }) {
   const [form, setForm] = useState(editItem || { nome: '', descricao: '', preco: '' });
   const [loading, setLoading] = useState(false);
-  const [success, setSuccess] = useState('');
   const [error, setError] = useState('');
 
   const handleChange = e => {
@@ -19,13 +18,10 @@ export default function MenuForm({ editItem, onSuccess }) {
     try {
       if (editItem) {
         await axios.put(`/pizzas/${editItem.id}`, form);
-        setSuccess('Item atualizado com sucesso!');
       } else {
         await axios.post('/pizzas', form);
-        setSuccess('Item adicionado com sucesso!');
-        setForm({ nome: '', descricao: '', preco: '' });
       }
-      if (onSuccess) onSuccess();
+      onSuccess && onSuccess();
     } catch {
       setError('Erro ao salvar item!');
     } finally {
@@ -34,49 +30,14 @@ export default function MenuForm({ editItem, onSuccess }) {
   };
 
   return (
-    <Paper elevation={0} sx={{ p: 2, boxShadow: 'none', background: 'transparent' }}>
-      <Typography variant="h6" color="primary" sx={{ fontWeight: 900, mb: 2 }}>
-        {editItem ? 'Editar Pizza' : 'Nova Pizza'}
-      </Typography>
-      <form onSubmit={handleSubmit}>
-        <TextField
-          label="Nome"
-          name="nome"
-          value={form.nome}
-          onChange={handleChange}
-          fullWidth
-          required
-          sx={{ mb: 2 }}
-        />
-        <TextField
-          label="Descrição"
-          name="descricao"
-          value={form.descricao}
-          onChange={handleChange}
-          fullWidth
-          required
-          sx={{ mb: 2 }}
-        />
-        <TextField
-          label="Preço"
-          name="preco"
-          value={form.preco}
-          onChange={handleChange}
-          type="number"
-          fullWidth
-          required
-          sx={{ mb: 2 }}
-        />
-        <Button type="submit" variant="contained" color="secondary" disabled={loading} fullWidth>
-          {loading ? <CircularProgress size={24} color="inherit" /> : (editItem ? 'Salvar Alterações' : 'Adicionar')}
-        </Button>
-      </form>
-      <Snackbar open={!!success} autoHideDuration={2000} onClose={() => setSuccess('')} anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}>
-        <Alert onClose={() => setSuccess('')} severity="success" sx={{ width: '100%' }}>{success}</Alert>
-      </Snackbar>
-      <Snackbar open={!!error} autoHideDuration={2000} onClose={() => setError('')} anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}>
-        <Alert onClose={() => setError('')} severity="error" sx={{ width: '100%' }}>{error}</Alert>
-      </Snackbar>
-    </Paper>
+    <Box component="form" onSubmit={handleSubmit} sx={{ display: 'flex', flexDirection: 'column', gap: 2, mt: 1 }}>
+      <TextField label="Nome" name="nome" value={form.nome} onChange={handleChange} required fullWidth />
+      <TextField label="Descrição" name="descricao" value={form.descricao} onChange={handleChange} required fullWidth />
+      <TextField label="Preço" name="preco" value={form.preco} onChange={handleChange} type="number" required fullWidth />
+      <Button type="submit" variant="contained" color="secondary" disabled={loading} fullWidth>
+        {loading ? <CircularProgress size={24} color="inherit" /> : (editItem ? 'Salvar Alterações' : 'Adicionar')}
+      </Button>
+      {error && <Alert severity="error">{error}</Alert>}
+    </Box>
   );
 }

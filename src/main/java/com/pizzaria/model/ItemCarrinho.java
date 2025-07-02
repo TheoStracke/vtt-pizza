@@ -14,6 +14,9 @@ public class ItemCarrinho {
     @ManyToOne
     private Pizza pizza;
 
+    @ManyToOne
+    private Cliente cliente;
+
     private int quantidade;
     private double subtotal;
 
@@ -24,6 +27,8 @@ public class ItemCarrinho {
     public void setCarrinho(Carrinho carrinho) { this.carrinho = carrinho; }
     public Pizza getPizza() { return pizza; }
     public void setPizza(Pizza pizza) { this.pizza = pizza; }
+    public Cliente getCliente() { return cliente; }
+    public void setCliente(Cliente cliente) { this.cliente = cliente; }
     public int getQuantidade() { return quantidade; }
     public void setQuantidade(int quantidade) { this.quantidade = quantidade; }
     public double getSubtotal() { return subtotal; }

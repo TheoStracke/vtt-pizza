@@ -1,6 +1,7 @@
 package com.pizzaria.service;
 
 import com.pizzaria.model.Pedido;
+import com.pizzaria.model.StatusPedido;
 import com.pizzaria.repository.PedidoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,7 +17,7 @@ public class PedidoService {
 
     public Pedido criar(Pedido pedido) {
         pedido.setData(LocalDateTime.now());
-        pedido.setStatus("em produção");
+        pedido.setStatus(StatusPedido.PENDENTE);
         return repo.save(pedido);
     }
 
