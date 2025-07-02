@@ -1,5 +1,9 @@
+// src/main/java/com/pizzaria/service/CarrinhoService.java
 package com.pizzaria.service;
 
+import com.pizzaria.dto.AtualizaQuantidadeDTO;
+import com.pizzaria.dto.ItemCarrinhoRequestDTO;
+import com.pizzaria.dto.ItemCarrinhoResponseDTO;
 import com.pizzaria.model.Carrinho;
 import com.pizzaria.model.Cliente;
 import com.pizzaria.model.ItemCarrinho;
@@ -8,82 +12,99 @@ import com.pizzaria.repository.CarrinhoRepository;
 import com.pizzaria.repository.ClienteRepository;
 import com.pizzaria.repository.ItemCarrinhoRepository;
 import com.pizzaria.repository.PizzaRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class CarrinhoService {
-    @Autowired
-    private CarrinhoRepository carrinhoRepository;
-    @Autowired
-    private ItemCarrinhoRepository itemCarrinhoRepository;
-    @Autowired
-    private ClienteRepository clienteRepository;
-    @Autowired
-    private PizzaRepository pizzaRepository;
 
-    public Carrinho salvar(Carrinho carrinho) {
-        return carrinhoRepository.save(carrinho);
-    }
+    private final PizzaRepository pizzaRepo;
+    private final ClienteRepository clienteRepo;
+    private final CarrinhoRepository carrinhoRepo;
+    private final ItemCarrinhoRepository itemRepo;
 
-    public List<ItemCarrinho> listarItens(Long carrinhoId) {
-        Optional<Carrinho> carrinho = carrinhoRepository.findById(carrinhoId);
-        return carrinho.map(Carrinho::getItens).orElse(null);
-    }
-
-    // Novo método para listar itens do carrinho por clienteId
-    public List<ItemCarrinho> listarItensPorCliente(Long clienteId) {
-        Carrinho carrinho = carrinhoRepository.findByClienteId(clienteId).orElse(null);
-        if (carrinho == null) return List.of();
-        // Garante que os itens estão carregados (evita LazyInitializationException)
-        if (carrinho.getItens() == null) return List.of();
-        return carrinho.getItens().stream().filter(ic -> ic.getQuantidade() > 0).toList();
-    }
-
-    public void removerItem(Long itemId) {
-        itemCarrinhoRepository.deleteById(itemId);
-    }
-
-    public ItemCarrinho atualizarItem(ItemCarrinho item) {
-        return itemCarrinhoRepository.save(item);
+    public CarrinhoService(PizzaRepository pizzaRepo,
+                           ClienteRepository clienteRepo,
+                           CarrinhoRepository carrinhoRepo,
+                           ItemCarrinhoRepository itemRepo) {
+        this.pizzaRepo = pizzaRepo;
+        this.clienteRepo = clienteRepo;
+        this.carrinhoRepo = carrinhoRepo;
+        this.itemRepo = itemRepo;
     }
 
     @Transactional
-    public ItemCarrinho adicionarItem(ItemCarrinho item) {
-        // Busca cliente e pizza
-        Cliente cliente = null;
-        if (item.getCarrinho() != null && item.getCarrinho().getCliente() != null) {
-            cliente = clienteRepository.findById(item.getCarrinho().getCliente().getId()).orElse(null);
-        } else if (item.getCliente() != null) { // Se vier direto no JSON
-            cliente = clienteRepository.findById(item.getCliente().getId()).orElse(null);
+    public void adicionarItem(ItemCarrinhoRequestDTO dto) {
+        Pizza pizza = pizzaRepo.findById(dto.getPizzaId())
+                .orElseThrow(() -> new RuntimeException("Pizza não encontrada"));
+        Cliente cliente = clienteRepo.findById(dto.getClienteId())
+                .orElseThrow(() -> new RuntimeException("Cliente não encontrado"));
+
+        // busca ou cria o carrinho
+        Carrinho carrinho = carrinhoRepo
+            .findByClienteId(cliente.getId())
+            .orElseGet(() -> {
+                Carrinho c = new Carrinho();
+                c.setCliente(cliente);
+                return carrinhoRepo.save(c);
+            });
+
+        // se já existe esse item no carrinho, só incrementa a quantidade
+        Optional<ItemCarrinho> opt = itemRepo
+            .findByCarrinhoIdAndPizzaId(carrinho.getId(), pizza.getId());
+
+        ItemCarrinho item = opt.orElseGet(() -> {
+            ItemCarrinho novo = new ItemCarrinho();
+            novo.setCarrinho(carrinho);
+            novo.setPizza(pizza);
+            novo.setCliente(cliente);
+            return novo;
+        });
+
+        // soma quantidades e recalcula subtotal
+        int novaQtd = item.getQuantidade() + dto.getQuantidade();
+        item.setQuantidade(novaQtd);
+        item.setSubtotal(pizza.getPreco() * novaQtd);
+
+        itemRepo.save(item);
+    }
+
+    @Transactional(readOnly = true)
+    public List<ItemCarrinhoResponseDTO> listarItensPorCliente(Long clienteId) {
+        return carrinhoRepo.findByClienteId(clienteId)
+            .map(Carrinho::getItens)
+            .orElse(List.of())
+            .stream()
+            .map(i -> new ItemCarrinhoResponseDTO(
+                  i.getId(),
+                  i.getPizza().getId(),
+                  i.getPizza().getNome(),
+                  i.getPizza().getDescricao(),
+                  i.getPizza().getPreco(),
+                  i.getQuantidade()
+            ))
+            .collect(Collectors.toList());
+    }
+
+    @Transactional
+    public void atualizarQuantidade(AtualizaQuantidadeDTO dto) {
+        ItemCarrinho item = itemRepo.findById(dto.getItemCarrinhoId())
+                .orElseThrow(() -> new RuntimeException("Item do carrinho não encontrado"));
+        if (dto.getQuantidade() < 1) {
+            itemRepo.delete(item);
+            return;
         }
-        Pizza pizza = item.getPizza() != null && item.getPizza().getId() != null
-            ? pizzaRepository.findById(item.getPizza().getId()).orElse(null)
-            : null;
-        if (cliente == null || pizza == null) return null;
-        // Busca ou cria carrinho do cliente
-        Carrinho carrinho = carrinhoRepository.findByClienteId(cliente.getId()).orElse(null);
-        if (carrinho == null) {
-            carrinho = new Carrinho();
-            carrinho.setCliente(cliente);
-            carrinho = carrinhoRepository.save(carrinho);
-        }
-        // Verifica se já existe o item dessa pizza no carrinho
-        ItemCarrinho existente = carrinho.getItens() != null ?
-            carrinho.getItens().stream().filter(ic -> ic.getPizza().getId().equals(pizza.getId())).findFirst().orElse(null) : null;
-        if (existente != null) {
-            existente.setQuantidade(existente.getQuantidade() + item.getQuantidade());
-            existente.setSubtotal(existente.getQuantidade() * pizza.getPreco());
-            return itemCarrinhoRepository.save(existente);
-        } else {
-            item.setCarrinho(carrinho);
-            item.setPizza(pizza);
-            item.setSubtotal(item.getQuantidade() * pizza.getPreco());
-            return itemCarrinhoRepository.save(item);
-        }
+        item.setQuantidade(dto.getQuantidade());
+        item.setSubtotal(item.getPizza().getPreco() * dto.getQuantidade());
+        itemRepo.save(item);
+    }
+
+    @Transactional
+    public void removerItem(Long itemId) {
+        itemRepo.deleteById(itemId);
     }
 }

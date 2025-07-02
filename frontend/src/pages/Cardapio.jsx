@@ -1,172 +1,167 @@
-import { useState, useEffect } from 'react';
-import { Box, Typography, Button, Paper, CircularProgress, Alert, Snackbar, Dialog, DialogTitle, DialogContent, DialogActions, TextField } from '@mui/material';
+// src/pages/Cardapio.jsx
+import React, { useState, useEffect, useMemo } from 'react';
+import {
+  Box,
+  Typography,
+  TextField,
+  Chip,
+  Snackbar,
+  Alert,
+  CircularProgress,
+  Skeleton,
+  Paper,
+  IconButton
+} from '@mui/material';
+import { styled, useTheme } from '@mui/material/styles';
+import { ShoppingCart as ShoppingCartIcon } from '@mui/icons-material';
+import { motion, AnimatePresence } from 'framer-motion';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
-import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
+
+// Brand colors
+const COLORS = {
+  primary: '#2E5F67',
+  secondary: '#FFCC00',
+  surface: '#F4F4F4',
+  bg: '#FFFFFF'
+};
+
+// Styled container
+const Container = styled(Box)(({ theme }) => ({
+  backgroundColor: COLORS.surface,
+  minHeight: '100vh',
+  padding: theme.spacing(4)
+}));
+
+// motion-enabled Paper
+const MotionPaper = motion.create(Paper);
 
 export default function Cardapio() {
+  const theme = useTheme();
   const [menu, setMenu] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
-  const [editItem, setEditItem] = useState(null);
-  const [openForm, setOpenForm] = useState(false);
-  const [success, setSuccess] = useState('');
-  const [form, setForm] = useState({ nome: '', descricao: '', preco: '' });
-  const [formLoading, setFormLoading] = useState(false);
-  const navigate = useNavigate();
-
-  const fetchMenu = () => {
-    setLoading(true);
-    axios.get('/pizzas')
-      .then(res => {
-        setMenu(res.data);
-        setError('');
-      })
-      .catch(() => setError('Erro ao carregar o cardápio!'))
-      .finally(() => setLoading(false));
-  };
+  const [errorMsg, setErrorMsg] = useState('');
+  const [search, setSearch] = useState('');
+  const [categories, setCategories] = useState([]);
+  const [selectedCategory, setSelectedCategory] = useState('Todas');
+  const [snackbar, setSnackbar] = useState({ open: false, msg: '', sev: 'success' });
 
   useEffect(() => {
-    fetchMenu();
+    (async () => {
+      try {
+        const res = await axios.get('http://localhost:8080/pizzas');
+        const items = Array.isArray(res.data) ? res.data : [];
+        setMenu(items);
+        setCategories(['Todas', ...Array.from(new Set(items.map(i => i.category || 'Sem categoria')))]);
+      } catch {
+        setErrorMsg('Falha ao carregar cardápio');
+      } finally {
+        setLoading(false);
+      }
+    })();
   }, []);
 
-  const handleEdit = (item) => {
-    setEditItem(item);
-    setForm(item);
-    setOpenForm(true);
-  };
+  const filtered = useMemo(() => {
+    return menu.filter(p =>
+      p.nome.toLowerCase().includes(search.toLowerCase()) &&
+      (selectedCategory === 'Todas' || (p.category || 'Sem categoria') === selectedCategory)
+    );
+  }, [menu, search, selectedCategory]);
 
-  const handleDelete = async (id) => {
-    if (!window.confirm('Tem certeza que deseja remover esta pizza?')) return;
+  const handleAdd = async pizza => {
     try {
-      await axios.delete(`/pizzas/${id}`);
-      setSuccess('Pizza removida com sucesso!');
-      fetchMenu();
-    } catch {
-      setError('Erro ao remover pizza!');
+      const clienteId = localStorage.getItem('clienteId');
+      if (!clienteId) throw new Error('Login necessário');
+      await axios.post('http://localhost:8080/carrinho', { pizzaId: pizza.id, clienteId, quantidade: 1 });
+      setSnackbar({ open: true, msg: '✅ Adicionado!', sev: 'success' });
+    } catch (e) {
+      setSnackbar({ open: true, msg: e.message, sev: 'error' });
     }
   };
-
-  const handleFormChange = e => {
-    setForm({ ...form, [e.target.name]: e.target.value });
-  };
-
-  const handleFormSubmit = async e => {
-    e.preventDefault();
-    setFormLoading(true);
-    setError('');
-    try {
-      if (editItem) {
-        await axios.put(`/pizzas/${editItem.id}`, form);
-        setSuccess('Item atualizado com sucesso!');
-      } else {
-        await axios.post('/pizzas', form);
-        setSuccess('Item adicionado com sucesso!');
-        setForm({ nome: '', descricao: '', preco: '' });
-      }
-      setOpenForm(false);
-      setEditItem(null);
-      fetchMenu();
-    } catch {
-      setError('Erro ao salvar item!');
-    } finally {
-      setFormLoading(false);
-    }
-  };
-
-  const handleAddToCart = async (pizza) => {
-    const clienteId = localStorage.getItem('clienteId');
-    if (!clienteId) {
-      setError('Faça login/cadastro para adicionar ao carrinho!');
-      return;
-    }
-    try {
-      await axios.post('/carrinho', {
-        pizza: { id: pizza.id, nome: pizza.nome, preco: pizza.preco },
-        quantidade: 1,
-        cliente: { id: clienteId }
-      });
-      setSuccess('Adicionado ao carrinho!');
-    } catch {
-      setError('Erro ao adicionar ao carrinho!');
-    }
-  };
-
-  if (loading) return <Box textAlign="center" mt={6}><CircularProgress color="secondary" /></Box>;
-  if (error) return <Alert severity="error">{error}</Alert>;
 
   return (
-    <Box>
-      <Typography variant="h2" color="primary" gutterBottom sx={{ fontWeight: 900 }}>
-        Cardápio
+    <Container>
+      <Typography
+        variant="h3"
+        align="center"
+        gutterBottom
+        sx={{ color: COLORS.primary, fontWeight: 900 }}
+      >
+        Nosso Cardápio
       </Typography>
-      <Button variant="contained" color="secondary" sx={{ mb: 3 }} onClick={() => { setEditItem(null); setForm({ nome: '', descricao: '', preco: '' }); setOpenForm(true); }}>
-        Adicionar Nova Pizza
-      </Button>
-      <Box display="flex" flexWrap="wrap" gap={4} justifyContent="center">
-        {menu.map(item => (
-          <Paper key={item.id} elevation={6} sx={{ p: 3, minWidth: 260, borderRadius: 6, mb: 2, position: 'relative' }}>
-            <Typography variant="h5" sx={{ fontWeight: 700 }}>{item.nome}</Typography>
-            <Typography variant="body1">Descrição: <b>{item.descricao}</b></Typography>
-            <Typography variant="h6" color="secondary">R$ {item.preco?.toFixed(2)}</Typography>
-            <Box mt={2} display="flex" gap={1}>
-              <Button variant="contained" color="secondary" startIcon={<ShoppingCartIcon />} onClick={() => handleAddToCart(item)}>
-                Adicionar ao Carrinho
-              </Button>
-              <Button variant="outlined" color="info" onClick={() => handleEdit(item)}>
-                Editar
-              </Button>
-              <Button variant="outlined" color="error" onClick={() => handleDelete(item.id)}>
-                Remover
-              </Button>
-            </Box>
-          </Paper>
+
+      {/* Busca e Filtros */}
+      <Box display="flex" flexWrap="wrap" gap={2} justifyContent="center" mb={4}>
+        <TextField
+          placeholder="Buscar..."
+          size="small"
+          value={search}
+          onChange={e => setSearch(e.target.value)}
+          sx={{ width: 240, backgroundColor: COLORS.bg, borderRadius: 1 }}
+        />
+        {categories.map(cat => (
+          <Chip
+            key={cat}
+            label={cat}
+            clickable
+            onClick={() => setSelectedCategory(cat)}
+            color={selectedCategory === cat ? 'secondary' : 'default'}
+          />
         ))}
       </Box>
-      <Dialog open={openForm} onClose={() => setOpenForm(false)}>
-        <DialogTitle>{editItem ? 'Editar Pizza' : 'Nova Pizza'}</DialogTitle>
-        <DialogContent>
-          <form onSubmit={handleFormSubmit}>
-            <TextField
-              label="Nome"
-              name="nome"
-              value={form.nome}
-              onChange={handleFormChange}
-              fullWidth
-              required
-              sx={{ mb: 2 }}
-            />
-            <TextField
-              label="Descrição"
-              name="descricao"
-              value={form.descricao}
-              onChange={handleFormChange}
-              fullWidth
-              required
-              sx={{ mb: 2 }}
-            />
-            <TextField
-              label="Preço"
-              name="preco"
-              value={form.preco}
-              onChange={handleFormChange}
-              type="number"
-              fullWidth
-              required
-              sx={{ mb: 2 }}
-            />
-            <Button type="submit" variant="contained" color="secondary" disabled={formLoading} fullWidth>
-              {formLoading ? <CircularProgress size={24} color="inherit" /> : (editItem ? 'Salvar Alterações' : 'Adicionar')}
-            </Button>
-          </form>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setOpenForm(false)} color="primary">Fechar</Button>
-        </DialogActions>
-      </Dialog>
-      <Snackbar open={!!success} autoHideDuration={2000} onClose={() => setSuccess('')} anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}>
-        <Alert onClose={() => setSuccess('')} severity="success" sx={{ width: '100%' }}>{success}</Alert>
+
+      {/* Conteúdo */}
+      {loading ? (
+        <Box display="grid" gridTemplateColumns={{ xs: '1fr', sm: '1fr 1fr', md: '1fr 1fr 1fr' }} gap={4}>
+          {Array.from({ length: 6 }).map((_, i) => (
+            <Skeleton key={i} variant="rectangular" height={220} />
+          ))}
+        </Box>
+      ) : errorMsg ? (
+        <Alert severity="error">{errorMsg}</Alert>
+      ) : (
+        <Box display="grid" gridTemplateColumns={{ xs: '1fr', sm: '1fr 1fr', md: '1fr 1fr 1fr' }} gap={4}>
+          <AnimatePresence>
+            {filtered.map((pizza, idx) => (
+              <MotionPaper
+                key={pizza.id}
+                layout
+                initial={{ opacity: 0, y: 40 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: 40 }}
+                transition={{ delay: idx * 0.1, duration: 0.5 }}
+                whileHover={{ scale: 1.05, boxShadow: theme.shadows[8] }}
+                sx={{ p: 3, borderRadius: 3, background: `linear-gradient(135deg, ${COLORS.bg} 0%, ${COLORS.secondary}22 100%)`, textAlign: 'center' }}
+              >
+                <Typography variant="h5" fontWeight={700} mb={1}>
+                  {pizza.nome}
+                </Typography>
+                <Typography variant="body2" color="text.secondary" mb={2}>
+                  {pizza.descricao}
+                </Typography>
+                <Typography variant="h6" color="secondary" mb={2}>
+                  R$ {pizza.preco.toFixed(2)}
+                </Typography>
+                <IconButton
+                  onClick={() => handleAdd(pizza)}
+                  sx={{ backgroundColor: COLORS.primary, color: COLORS.bg, '&:hover': { backgroundColor: `${COLORS.primary}cc` } }}
+                >
+                  <ShoppingCartIcon />
+                </IconButton>
+              </MotionPaper>
+            ))}
+          </AnimatePresence>
+        </Box>
+      )}
+
+      {/* Feedback */}
+      <Snackbar
+        open={snackbar.open}
+        autoHideDuration={2000}
+        onClose={() => setSnackbar(s => ({ ...s, open: false }))}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+      >
+        <Alert severity={snackbar.sev}>{snackbar.msg}</Alert>
       </Snackbar>
-    </Box>
+    </Container>
   );
 }
