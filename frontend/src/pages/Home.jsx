@@ -23,7 +23,6 @@ export default function Home() {
 Hoje, a VTT não é apenas referência no Brasil, mas um verdadeiro império interplanetário do sabor. Reconhecida em colônias lunares e estações orbitais, a VTT Pizzaria domina o sistema solar quando o assunto é pizza.
 Com ingredientes selecionados, massa fermentada naturalmente e um legado inabalável, servimos muito mais que comida: servimos história.
             </Typography>
-            
           </motion.div>
         </Grid>
         <Grid item xs={12} md={6}>
@@ -34,10 +33,10 @@ Com ingredientes selecionados, massa fermentada naturalmente e um legado inabal�
           >
             <Paper elevation={6} sx={{ borderRadius: 4, overflow: 'hidden', maxWidth: 500, mx: 'auto' }}>
               <img
-      src="/logopizza.png" // ou {logopizza} se importar da pasta src/assets
-      alt="Logo"
-      style={{ height: 400, marginRight: 12 }}
-    />
+                src={bannerImg}
+                alt="Salão Parma"
+                style={{ width: '100%', display: 'block' }}
+              />
             </Paper>
           </motion.div>
         </Grid>
@@ -46,7 +45,6 @@ Com ingredientes selecionados, massa fermentada naturalmente e um legado inabal�
         <Typography variant="h6" color="text.secondary">
           R. Alidolao Pertinho 333, Centro - Palha do osso &nbsp;|&nbsp; (48) 9999-9999 &nbsp;|&nbsp; (48) 99999-9999
         </Typography>
-        
       </Box>
     </Box>
   );

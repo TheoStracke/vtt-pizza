@@ -1,99 +1,80 @@
-# VTT Pizza 🍕
+# VTT Pizza - Aplicativo Web de Gerenciamento de Cardápio
 
-Sistema completo de pizzaria: backend Spring Boot + frontend React moderno, com fluxo de carrinho, pedidos e cadastro de clientes.
+Este projeto é um sistema completo para gerenciamento de itens de menu de pizza, com backend em Spring Boot e frontend em React + Vite, utilizando Material-UI e integração total via API REST.
 
-## Visão Geral
-- **Backend:** Java + Spring Boot, API RESTful, autenticação simples por clienteId.
-- **Frontend:** React + Vite + Material-UI, animações modernas, responsivo, experiência fluida.
-- **Funcionalidades:**
-  - Cadastro de cliente (obrigatório para usar carrinho)
-  - Listagem e busca de pizzas (cardápio)
-  - Adição/remoção/atualização de itens no carrinho
-  - Finalização de pedido (transforma carrinho em pedido)
-  - Feedback visual em todas as operações
-  - Rotas protegidas para fluxo correto
+# Equipe
+Thiago
+Theo
+Vinicius
 
-## Instalação e Execução
+## Funcionalidades
+- Listar itens do menu (GET /menu ou /cardapio)
+- Visualizar detalhes do item (GET /menu/{id})
+- Adicionar novos itens (POST /menu)
+- Editar itens (PUT/PATCH /menu/{id})
+- Remover itens (DELETE /menu/{id})
+- Feedback visual (loading, sucesso, erro)
+- Interface moderna e responsiva
+
+## Instalação e Uso
 
 ### Backend (Spring Boot)
-1. Configure o banco (H2 ou MySQL). Exemplo H2:
-   ```properties
-   spring.datasource.url=jdbc:h2:mem:testdb
-   spring.datasource.driver-class-name=org.h2.Driver
-   spring.datasource.username=sa
-   spring.datasource.password=
-   spring.jpa.database-platform=org.hibernate.dialect.H2Dialect
-   spring.h2.console.enabled=true
-   spring.jpa.hibernate.ddl-auto=update
-   ```
-2. Rodar:
-   ```sh
-   Entre no arquivo PizzaDemoApplicaton.java e clique no botão de rodar código.
-   ```
-3. API disponível em http://localhost:8080/
+1. **No Codespaces:**
+   - Edite `src/main/resources/application.properties` para usar H2 (já configurado para facilitar):
+     ```properties
+     spring.datasource.url=jdbc:h2:mem:testdb
+     spring.datasource.driver-class-name=org.h2.Driver
+     spring.datasource.username=sa
+     spring.datasource.password=
+     spring.jpa.database-platform=org.hibernate.dialect.H2Dialect
+     spring.h2.console.enabled=true
+     spring.jpa.hibernate.ddl-auto=update
+     spring.autoconfigure.exclude=org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration
+     ```
+   - No terminal:
+     ```sh
+     mvn spring-boot:run
+     ```
+   - Acesse a API em http://localhost:8080/
 
 ### Frontend (React + Vite)
-1. Em outro terminal:
+1. Abra outro terminal e rode:
    ```sh
    cd frontend
    npm install
    npm run dev
    ```
-2. Acesse http://localhost:5173/
+2. Acesse o endereço mostrado (ex: http://localhost:5173/)
 
-## Principais Endpoints REST
+## Endpoints principais
+- GET    `/menu`         → Lista todos os itens
+- GET    `/menu/{id}`    → Detalhes de um item
+- POST   `/menu`         → Adiciona novo item
+- PUT    `/menu/{id}`    → Edita item
+- DELETE `/menu/{id}`    → Remove item
 
-### Cardápio
-- `GET    /pizzas`           — Lista pizzas
-- `GET    /pizzas/{id}`      — Detalhes de pizza
-- `POST   /pizzas`           — Adiciona pizza
-- `PUT    /pizzas/{id}`      — Edita pizza
-- `DELETE /pizzas/{id}`      — Remove pizza
+## Prompts do GitHub Copilot utilizados
+- "desenvolva o frontend a partir do backend do projeto completo com react, quero animações fluidas e cores em amarelo e tons de amarelo, vermelho e vermelho escuro, design super megar hiper moderno"
+- "as cores estão feias, deixa com cores mais modernas, tem que ser clicável com opção de adicionar no carrinho"
+- "Continue: 'Continue to iterate?'"
+- "Failed to load resource: the server responded with a status of 404 (Not Found) ..."
+- "ERR_CONNECTION_REFUSED\nNão é possível acessar esse site\nA conexão com localhost foi recusada. ..."
+- "npm ERR! code ENOENT\nnpm ERR! syscall open\nnpm ERR! path ...\nnpm ERR! enoent Could not read package.json: Error: ENOENT: no such file or directory, open ..."
+- "[ERROR] Failed to execute goal org.apache.maven.plugins:maven-surefire-plugin:3.5.3:test (default-test) on project pizzademo: ..."
+- "[ERROR] Failed to execute goal org.springframework.boot:spring-boot-maven-plugin:3.4.5:run (default-cli) on project pizzademo: Process terminated with exit code: 1 ..."
 
-### Cliente
-- `POST   /clientes`         — Cadastra cliente
+## Demonstração CRUD
+- Todas as operações podem ser testadas na interface web.
+- O backend pode ser testado via Postman/Insomnia ou pelo frontend.
 
-### Carrinho
-- `POST   /carrinho`         — Adiciona item (clienteId, pizzaId, quantidade)
-- `GET    /carrinho/cliente/{clienteId}` — Lista itens do carrinho
-- `PUT    /carrinho`         — Atualiza quantidade (itemCarrinhoId, quantidade)
-- `DELETE /carrinho/{itemId}`— Remove item
+## Organização
+- Código React em `frontend/`
+- Código Java em `src/main/java/com/pizzaria/`
+- Controllers, DTOs, Models e Services organizados por domínio
 
-### Pedido
-- `POST   /pedidos/finalizar?clienteId=...` — Finaliza pedido (transforma carrinho em pedido)
-- `GET    /pedidos/usuarios/{clienteId}/pedidos` — Histórico do cliente
-
-## Fluxo do Usuário
-1. **Cadastro:**
-   - Preencha nome/email/telefone. O clienteId é salvo no localStorage.
-2. **Navegue pelo cardápio:**
-   - Veja pizzas, filtre, busque, adicione ao carrinho.
-3. **Carrinho:**
-   - Veja, remova ou altere quantidades. Só aparece se estiver logado.
-4. **Finalizar pedido:**
-   - Clique em finalizar. O carrinho é esvaziado e o pedido salvo.
-5. **Feedback:**
-   - Todas as ações mostram loading, sucesso ou erro.
-
-## Estrutura do Projeto
-- `frontend/` — React, páginas e componentes
-- `src/main/java/com/pizzaria/` — Backend Java
-  - `controller/` — Endpoints REST
-  - `model/` — Entidades JPA
-  - `service/` — Lógica de negócio
-  - `repository/` — JPA Repositories
-  - `dto/` — DTOs para requests/responses
-
-## Telas e Experiência
-- **Cardápio:** visual moderno, busca, filtros, animações
-- **Carrinho:** visualização clara, edição inline, feedback
-- **Cadastro:** simples, direto, obrigatório para usar carrinho
-- **Admin:** CRUD de pizzas
-
-## Autores
-- Thiago
-- Theo
-- Vinicius
+## Participação
+- Projeto desenvolvido em equipe, com apoio do GitHub Copilot para acelerar e aprimorar o desenvolvimento.
 
 ---
-Projeto desenvolvido em equipe, com apoio do GitHub Copilot.
+
+Se tiver dúvidas, abra uma issue ou consulte os comentários no código!

@@ -68,22 +68,15 @@ export default function Cardapio() {
   }, [menu, search, selectedCategory]);
 
   const handleAdd = async pizza => {
-  try {
-    const clienteId = localStorage.getItem('clienteId');
-    if (!clienteId) throw new Error('necessário login para entrar');
-    await axios.post('http://localhost:8080/carrinho', { pizzaId: pizza.id, clienteId, quantidade: 1 });
-    setSnackbar({ open: true, msg: '✅ Adicionado!', sev: 'success' });
-  } catch (e) {
-    if (e.response && e.response.status === 500) {
-      setSnackbar({ open: true, msg: 'Necessário login para adicionar pizza ao carrinho', sev: 'error' });
-    } else if (e.message === 'Necessário login para adicionar pizza ao carrinho') {
+    try {
+      const clienteId = localStorage.getItem('clienteId');
+      if (!clienteId) throw new Error('Login necessário');
+      await axios.post('http://localhost:8080/carrinho', { pizzaId: pizza.id, clienteId, quantidade: 1 });
+      setSnackbar({ open: true, msg: '✅ Adicionado!', sev: 'success' });
+    } catch (e) {
       setSnackbar({ open: true, msg: e.message, sev: 'error' });
-    } else {
-      setSnackbar({ open: true, msg: 'Erro ao adicionar. Tente novamente.', sev: 'error' });
     }
-  }
-};
-
+  };
 
   return (
     <Container>
@@ -95,8 +88,6 @@ export default function Cardapio() {
       >
         Nosso Cardápio
       </Typography>
-
-      
 
       {/* Busca e Filtros */}
       <Box display="flex" flexWrap="wrap" gap={2} justifyContent="center" mb={4}>
@@ -144,7 +135,6 @@ export default function Cardapio() {
                 <Typography variant="h5" fontWeight={700} mb={1}>
                   {pizza.nome}
                 </Typography>
-                
                 <Typography variant="body2" color="text.secondary" mb={2}>
                   {pizza.descricao}
                 </Typography>
@@ -162,13 +152,6 @@ export default function Cardapio() {
           </AnimatePresence>
         </Box>
       )}
-      <AnimatePresence>
-              {!loading && menu.length === 0 && (
-                <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-                  <Alert severity="info" sx={{ mt: 4 }}>Nenhuma pizza encontrada.</Alert>
-                </motion.div>
-              )}
-            </AnimatePresence>
 
       {/* Feedback */}
       <Snackbar

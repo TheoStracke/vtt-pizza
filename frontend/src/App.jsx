@@ -31,7 +31,6 @@ import Ingredientes from './pages/Ingredientes';
 import Carrinho from './pages/Carrinho';
 import ClienteForm from './pages/ClienteForm';
 
-
 // Rotas de navegação
 const navItems = [
   { label: 'Home', path: '/' },
@@ -86,28 +85,21 @@ export default function App() {
                   <MenuIcon />
                 </IconButton>
               )}
-              <Box display="flex" alignItems="center" sx={{ flexGrow: 1 }}>
-    <img
-      src="/logopizza.png" // ou {logopizza} se importar da pasta src/assets
-      alt="Logo"
-      style={{ height: 40, marginRight: 12 }}
-    />
-    <Typography
-      variant="h4"
-      component={Link}
-      to="/"
-      sx={{
-        textDecoration: 'none',
-        color: 'common.white',
-        fontWeight: 900,
-        letterSpacing: 2,
-        '&:hover': { opacity: 0.8 }
-      }}
-    >
-      VTT Pizza
-    </Typography>
-  </Box>
-              
+              <Typography
+                variant="h4"
+                component={Link}
+                to="/"
+                sx={{
+                  flexGrow: 1,
+                  textDecoration: 'none',
+                  color: 'common.white',
+                  fontWeight: 900,
+                  letterSpacing: 2,
+                  '&:hover': { opacity: 0.8 }
+                }}
+              >
+                VTT Pizza
+              </Typography>
 
               {!isMobile && (
                 <Box component="nav" sx={{ display: 'flex', gap: 2 }}>
@@ -175,9 +167,7 @@ function NavButton({ to, label }) {
           },
           '&:hover::after': { width: '100%' }
         }}
-        
       >
-        
         {label}
       </Button>
     </motion.div>
