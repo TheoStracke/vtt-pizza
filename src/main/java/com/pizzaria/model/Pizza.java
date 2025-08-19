@@ -17,7 +17,11 @@ public class Pizza {
     @ElementCollection
     private List<String> ingredientes = new ArrayList<>();
 
-    private String descricao; // <-- novo campo
+    private String descricao;
+
+    @ManyToOne
+    @JoinColumn(name = "cardapio_id") // FK para Cardapio
+    private Cardapio cardapio;
 
     // getters e setters
     public Long getId() { return id; }
@@ -34,4 +38,7 @@ public class Pizza {
 
     public String getDescricao() { return descricao; }
     public void setDescricao(String descricao) { this.descricao = descricao; }
+
+    public Cardapio getCardapio() { return cardapio; }
+    public void setCardapio(Cardapio cardapio) { this.cardapio = cardapio; }
 }

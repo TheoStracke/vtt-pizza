@@ -2,6 +2,7 @@ package com.pizzaria.model;
 
 import jakarta.persistence.*;
 import java.util.List;
+import java.util.ArrayList;
 
 @Entity
 public class Cardapio {
@@ -11,8 +12,8 @@ public class Cardapio {
 
     private String nome;
 
-    @OneToMany(mappedBy = "cardapio", cascade = CascadeType.ALL)
-    private List<Pizza> pizzas;
+    @OneToMany(mappedBy = "cardapio", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Pizza> pizzas = new ArrayList<>();
 
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
