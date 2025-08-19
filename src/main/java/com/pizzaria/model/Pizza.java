@@ -1,6 +1,7 @@
 package com.pizzaria.model;
 
 import jakarta.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -11,68 +12,26 @@ public class Pizza {
     private Long id;
 
     private String nome;
-    private String descricao;
-    private double preco;
+    private Double preco;
 
-    @ManyToOne
-    @JoinColumn(name = "cardapio_id")
-    private Cardapio cardapio;
+    @ElementCollection
+    private List<String> ingredientes = new ArrayList<>();
 
-    @ManyToMany
-    @JoinTable(
-        name = "pizza_ingrediente",
-        joinColumns = @JoinColumn(name = "pizza_id"),
-        inverseJoinColumns = @JoinColumn(name = "ingrediente_id")
-    )
-    private List<Ingrediente> ingredientes;
+    private String descricao; // <-- novo campo
 
-    // Getters e Setters
+    // getters e setters
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
 
-    public Long getId() {
-        return id;
-    }
+    public String getNome() { return nome; }
+    public void setNome(String nome) { this.nome = nome; }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+    public Double getPreco() { return preco; }
+    public void setPreco(Double preco) { this.preco = preco; }
 
-    public String getNome() {
-        return nome;
-    }
+    public List<String> getIngredientes() { return ingredientes; }
+    public void setIngredientes(List<String> ingredientes) { this.ingredientes = ingredientes; }
 
-    public void setNome(String nome) {
-        this.nome = nome;
-    }
-
-    public String getDescricao() {
-        return descricao;
-    }
-
-    public void setDescricao(String descricao) {
-        this.descricao = descricao;
-    }
-
-    public double getPreco() {
-        return preco;
-    }
-
-    public void setPreco(double preco) {
-        this.preco = preco;
-    }
-
-    public Cardapio getCardapio() {
-        return cardapio;
-    }
-
-    public void setCardapio(Cardapio cardapio) {
-        this.cardapio = cardapio;
-    }
-
-    public List<Ingrediente> getIngredientes() {
-        return ingredientes;
-    }
-
-    public void setIngredientes(List<Ingrediente> ingredientes) {
-        this.ingredientes = ingredientes;
-    }
+    public String getDescricao() { return descricao; }
+    public void setDescricao(String descricao) { this.descricao = descricao; }
 }
