@@ -1,57 +1,64 @@
-# VTT Pizza - Aplicativo Web de Gerenciamento de Cardápio
 
-Este projeto é um sistema completo para gerenciamento de itens de menu de pizza, com backend em Spring Boot e frontend em React + Vite, utilizando Material-UI e integração total via API REST.
+# VTT Pizza - Sistema Completo de Pizzaria
+
+O VTT Pizza é um sistema acadêmico completo para gerenciamento de uma pizzaria, integrando backend (Spring Boot), frontend (React + Vite) e recursos de Inteligência Artificial (IA). O objetivo é automatizar pedidos, gerenciar clientes, cardápio, ingredientes, carrinho e pedidos, além de oferecer uma experiência moderna e personalizada.
 
 # Equipe
 Thiago
 Theo
 Vinicius
 
-## Funcionalidades
-- Listar itens do menu (GET /menu ou /cardapio)
-- Visualizar detalhes do item (GET /menu/{id})
-- Adicionar novos itens (POST /menu)
-- Editar itens (PUT/PATCH /menu/{id})
-- Remover itens (DELETE /menu/{id})
-- Feedback visual (loading, sucesso, erro)
-- Interface moderna e responsiva
 
-## Instalação e Uso
+## Funcionalidades
+### Cliente
+- Visualização do cardápio
+- Filtro de ingredientes
+- Adição de pizzas ao carrinho
+- Cadastro e login
+- Finalização de pedidos
+
+### Administrador
+- Cadastro/edição de pizzas e ingredientes
+- Visualização e gerenciamento de pedidos
+- Acesso a relatórios
+
+### Inteligência Artificial (IA)
+- Sugestão de pizzas baseada em preferências do usuário
+- Geração automática de descrições de pizzas
+
+
+## Instalação e Execução
 
 ### Backend (Spring Boot)
-1. **No Codespaces:**
-   - Edite `src/main/resources/application.properties` para usar H2 (já configurado para facilitar):
-     ```properties
-     spring.datasource.url=jdbc:h2:mem:testdb
-     spring.datasource.driver-class-name=org.h2.Driver
-     spring.datasource.username=sa
-     spring.datasource.password=
-     spring.jpa.database-platform=org.hibernate.dialect.H2Dialect
-     spring.h2.console.enabled=true
-     spring.jpa.hibernate.ddl-auto=update
-     spring.autoconfigure.exclude=org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration
-     ```
-   - No terminal:
-     ```sh
-     mvn spring-boot:run
-     ```
-   - Acesse a API em http://localhost:8080/
+1. Configure o banco de dados em `src/main/resources/application.properties` (MySQL por padrão, mas pode usar H2 para testes).
+2. Execute:
+  ```sh
+  ./mvnw spring-boot:run
+  ```
+3. Acesse a API em http://localhost:8080/
 
 ### Frontend (React + Vite)
-1. Abra outro terminal e rode:
-   ```sh
-   cd frontend
-   npm install
-   npm run dev
-   ```
-2. Acesse o endereço mostrado (ex: http://localhost:5173/)
+1. No terminal:
+  ```sh
+  cd frontend
+  npm install
+  npm run dev
+  ```
+2. Acesse http://localhost:5173/
 
-## Endpoints principais
-- GET    `/menu`         → Lista todos os itens
-- GET    `/menu/{id}`    → Detalhes de um item
-- POST   `/menu`         → Adiciona novo item
-- PUT    `/menu/{id}`    → Edita item
-- DELETE `/menu/{id}`    → Remove item
+### Banco de Dados
+- Execute o script `dataBase/vtt-pizza.sql` no MySQL para criar as tabelas e dados iniciais.
+
+### Docker
+- O projeto possui Dockerfile para backend e frontend, facilitando o deploy em containers.
+
+
+## Endpoints principais (exemplos)
+- GET    `/api/cardapio`         → Lista todos os itens do cardápio
+- GET    `/api/cardapio/{id}`    → Detalhes de um item
+- POST   `/api/cardapio`         → Adiciona novo item
+- PUT    `/api/cardapio/{id}`    → Edita item
+- DELETE `/api/cardapio/{id}`    → Remove item
 
 ## Prompts do GitHub Copilot utilizados
 - "desenvolva o frontend a partir do backend do projeto completo com react, quero animações fluidas e cores em amarelo e tons de amarelo, vermelho e vermelho escuro, design super megar hiper moderno"
@@ -63,17 +70,29 @@ Vinicius
 - "[ERROR] Failed to execute goal org.apache.maven.plugins:maven-surefire-plugin:3.5.3:test (default-test) on project pizzademo: ..."
 - "[ERROR] Failed to execute goal org.springframework.boot:spring-boot-maven-plugin:3.4.5:run (default-cli) on project pizzademo: Process terminated with exit code: 1 ..."
 
-## Demonstração CRUD
-- Todas as operações podem ser testadas na interface web.
-- O backend pode ser testado via Postman/Insomnia ou pelo frontend.
 
-## Organização
-- Código React em `frontend/`
-- Código Java em `src/main/java/com/pizzaria/`
-- Controllers, DTOs, Models e Services organizados por domínio
+## Testes
+- O backend possui testes automatizados (JUnit/Spring Boot) em `src/test/java/com/pizzaria/`.
+- O frontend possui testes com React Testing Library em `frontend/src/App.test.jsx`.
+- Você pode testar manualmente via interface web ou ferramentas como Postman.
 
-## Participação
-- Projeto desenvolvido em equipe, com apoio do GitHub Copilot para acelerar e aprimorar o desenvolvimento.
+
+## Estrutura do Projeto
+- Frontend: `frontend/`
+- Backend: `src/main/java/com/pizzaria/`
+- Scripts SQL: `dataBase/`
+- Testes: `src/test/java/com/pizzaria/` e `frontend/src/`
+
+
+## Inteligência Artificial (IA)
+O sistema utiliza IA para:
+- **Recomendar pizzas**: Sugestões baseadas em preferências do usuário, histórico de pedidos ou ingredientes favoritos.
+- **Gerar descrições automáticas**: Utiliza técnicas de Processamento de Linguagem Natural (PLN) para criar descrições atrativas para novos sabores.
+
+A IA pode ser implementada tanto no backend (Java) quanto no frontend (JavaScript), usando bibliotecas como TensorFlow, scikit-learn ou APIs externas. O objetivo é personalizar a experiência do usuário e agilizar o cadastro de novos produtos.
+
+---
+
 
 ---
 
