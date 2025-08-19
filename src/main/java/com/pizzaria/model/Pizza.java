@@ -15,6 +15,8 @@ public class Pizza {
     private Double preco;
 
     @ElementCollection
+    @CollectionTable(name = "pizza_ingredientes", joinColumns = @JoinColumn(name = "pizza_id"))
+    @Column(name = "ingrediente")
     private List<String> ingredientes = new ArrayList<>();
 
     private String descricao;
